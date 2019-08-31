@@ -5,6 +5,7 @@ import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.PipelineResult;
+import org.apache.beam.sdk.PipelineRunner;
 import org.apache.beam.sdk.io.TextIO;
 import org.apache.beam.sdk.options.PipelineOptionsFactory;
 import org.apache.beam.sdk.transforms.MapElements;
@@ -22,6 +23,12 @@ public class ReadFromS3 {
         System.out.println("READ FROM S3, args " + Arrays.toString(args));
         Options options = PipelineOptionsFactory.fromArgs(args).withValidation().as(Options.class);
         Pipeline pipeline = Pipeline.create(options);
+        try {
+            options.setRunner((Class<? extends PipelineRunner<?>>)
+                    Class.forName("org.apache.nemo.client.beam.NemoRunner"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         AWSCredentials awsCredentials = new BasicAWSCredentials(options.getAWSAccessKey().get(),
                 options.getAWSSecretKey().get());
