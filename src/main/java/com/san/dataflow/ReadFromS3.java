@@ -12,12 +12,14 @@ import org.apache.beam.sdk.transforms.SimpleFunction;
 import org.apache.beam.sdk.values.PCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.util.Arrays;
 
 public class ReadFromS3 {
 
     private static final Logger log = LoggerFactory.getLogger(ReadFromS3.class);
 
     public static void main(String[] args) {
+        System.out.println("READ FROM S3, args " + Arrays.toString(args));
         Options options = PipelineOptionsFactory.fromArgs(args).withValidation().as(Options.class);
         Pipeline pipeline = Pipeline.create(options);
 
@@ -26,7 +28,7 @@ public class ReadFromS3 {
         options.setAwsCredentialsProvider(new AWSStaticCredentialsProvider(awsCredentials));
 
         PCollection<String> fileLines =
-                pipeline.apply("ReadFromFile", TextIO.read().from("s3://test.csv")); //Replace the file path
+                pipeline.apply("ReadFromFile", TextIO.read().from("s3://lambda-executor-examples/sample1.csv")); //Replace the file path
 
         fileLines.apply("PrintLines", MapElements.via(new SimpleFunction<String, Void>() {
             @Override
