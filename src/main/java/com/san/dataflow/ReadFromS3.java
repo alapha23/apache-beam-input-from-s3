@@ -37,13 +37,13 @@ public class ReadFromS3 {
         PCollection<String> fileLines =
                 pipeline.apply("ReadFromFile", TextIO.read().from("s3://lambda-executor-examples/sample1.csv")); //Replace the file path
 
-        fileLines.apply("PrintLines", MapElements.via(new SimpleFunction<String, Void>() {
+        fileLines.apply("PrintLines", MapElements.via(new SimpleFunction<String, String>() {
             @Override
-            public Void apply(String lines) {
+            public String apply(String lines) {
                 System.out.println(lines);
-                return null;
+                return lines;
             }
-        }));
+        })).apply("WriteToS3", TextIO.write().to("s3://lambda-executor-examples/sample_2.csv"));
 
         PipelineResult result = pipeline.run();
         try {
