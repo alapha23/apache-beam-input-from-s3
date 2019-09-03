@@ -20,7 +20,6 @@ public class ReadFromS3 {
     private static final Logger log = LoggerFactory.getLogger(ReadFromS3.class);
 
     public static void main(String[] args) {
-        System.out.println("READ FROM S3, args " + Arrays.toString(args));
         Options options = PipelineOptionsFactory.fromArgs(args).withValidation().as(Options.class);
         Pipeline pipeline = Pipeline.create(options);
         try {
